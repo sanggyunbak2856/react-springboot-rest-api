@@ -1,8 +1,10 @@
 package com.example.demo.domain.repository;
 
+import com.example.demo.RandomItemFactory;
 import com.example.demo.RandomUserFactory;
+import com.example.demo.domain.entity.Item;
 import com.example.demo.domain.entity.User;
-import org.assertj.core.api.Assertions;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
+@Slf4j
 @SpringBootTest
 class UserRepositoryTest {
 
@@ -32,7 +34,7 @@ class UserRepositoryTest {
     @Transactional
     void 유저를_저장하고_조회한다() {
         // given
-        User userA = RandomUserFactory.createRandomUuidUser();
+        User userA = RandomUserFactory.createRandomUser();
 
         // when
         User savedUser = userRepository.save(userA);
@@ -46,7 +48,7 @@ class UserRepositoryTest {
     @Transactional
     void 유저를_수정한다() {
         // given
-        User userA = RandomUserFactory.createRandomUuidUser();
+        User userA = RandomUserFactory.createRandomUser();
         User savedUser = userRepository.save(userA);
 
         // when
@@ -63,7 +65,7 @@ class UserRepositoryTest {
     @Transactional
     void 유저를_삭제한다() {
         // given
-        User userA = RandomUserFactory.createRandomUuidUser();
+        User userA = RandomUserFactory.createRandomUser();
         User savedUser = userRepository.save(userA);
 
         // when
@@ -73,4 +75,24 @@ class UserRepositoryTest {
         Optional<User> foundUser = userRepository.findById(savedUser.getId());
         assertThat(foundUser).isEmpty();
     }
+
+    @Test
+    @Transactional
+    void 유저_삭제시_아이템이_함께_삭제된다() {
+        // given
+        User userA = RandomUserFactory.createRandomUser();
+        Item itemA = RandomItemFactory.createRandomItem();
+        itemA.setUser(userA);
+        User savedUser = userRepository.save(userA);
+        Item savedItem = itemRepository.save(itemA);
+
+        // when
+        userRepository.deleteById(savedUser.getId());
+
+        // then
+        Optional<Item> foundItem = itemRepository.findById(savedItem.getId());
+        assertThat(foundItem).isEmpty();
+    }
+
+
 }
