@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "items")
-public class Item {
+public class Item extends BaseTime{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -38,5 +38,13 @@ public class Item {
         this.price = price;
         this.quantity = quantity;
         this.category = category;
+    }
+
+    public void setUser(User user) {
+        if(this.user != null) {
+            this.user.getItems().remove(this);
+        }
+        this.user = user;
+        this.user.getItems().add(this);
     }
 }
