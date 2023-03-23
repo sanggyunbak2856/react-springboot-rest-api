@@ -1,17 +1,21 @@
 package com.example.demo;
 
 import com.example.demo.domain.entity.User;
+import com.github.javafaker.Faker;
+import com.github.javafaker.Name;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
 public class RandomUserFactory {
-    public static User createRandomUuidUser() {
+    private static Faker faker = new Faker();
+
+    public static User createRandomUser() {
         return User.builder()
-                .userId(UUID.randomUUID().toString())
-                .address(UUID.randomUUID().toString())
-                .email(UUID.randomUUID().toString())
-                .password(UUID.randomUUID().toString())
+                .userId(faker.name().name())
+                .address(faker.address().fullAddress())
+                .email(faker.internet().emailAddress())
+                .password(faker.internet().password())
                 .build();
     }
 }
