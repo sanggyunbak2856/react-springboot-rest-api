@@ -7,6 +7,7 @@ import com.example.demo.web.converter.UserConverter;
 import com.example.demo.web.dto.IdResponseDto;
 import com.example.demo.web.dto.user.UserResponseDto;
 import com.example.demo.web.dto.user.UserSaveDto;
+import com.example.demo.web.dto.user.UserUpdateDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -75,4 +76,31 @@ class UserServiceTest {
         }).isInstanceOf(IllegalArgumentException.class).hasMessageContaining("User not found");
     }
 
+    @Test
+    void 유저를_수정한다() {
+        // given
+        User user = RandomUserFactory.createRandomUser();
+        UserUpdateDto userUpdateDto = RandomUserFactory.createRandomUserUpdateDto();
+        user.setId(1L);
+        when(userRepository.findById(any())).thenReturn(Optional.of(user));
+
+        // when
+        IdResponseDto updatedId = userService.update(1L, userUpdateDto);
+
+        // then
+        then(userConverter).should().userUpdate(any(), any());
+        assertThat(updatedId.getId()).isEqualTo(1L);
+    }
+
+    @Test
+    void 잘못된_아이디로_유저를_수정한다() {
+        // given
+        UserUpdateDto userUpdateDto = RandomUserFactory.createRandomUserUpdateDto();
+        when(userRepository.findById(any())).thenReturn(Optional.empty());
+
+        // when, then
+        assertThatThrownBy(() -> {
+            userService.update(1L, userUpdateDto);
+        }).isInstanceOf(IllegalArgumentException.class).hasMessageContaining("User not found");
+    }
 }
