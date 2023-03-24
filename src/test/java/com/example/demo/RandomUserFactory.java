@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import com.example.demo.domain.entity.User;
+import com.example.demo.web.dto.user.UserSaveDto;
 import com.github.javafaker.Faker;
 import com.github.javafaker.Name;
 import org.springframework.stereotype.Component;
@@ -12,6 +13,15 @@ public class RandomUserFactory {
 
     public static User createRandomUser() {
         return User.builder()
+                .userId(faker.name().name())
+                .address(faker.address().fullAddress())
+                .email(faker.internet().emailAddress())
+                .password(faker.internet().password())
+                .build();
+    }
+
+    public static UserSaveDto createRandomUserSaveDto() {
+        return UserSaveDto.builder()
                 .userId(faker.name().name())
                 .address(faker.address().fullAddress())
                 .email(faker.internet().emailAddress())
