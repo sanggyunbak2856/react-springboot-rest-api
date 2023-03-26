@@ -1,10 +1,7 @@
 package com.example.demo.domain.repository;
 
-import com.example.demo.RandomItemFactory;
-import com.example.demo.RandomUserFactory;
 import com.example.demo.domain.entity.Item;
 import com.example.demo.domain.entity.User;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+import static com.example.demo.DummyObjectFactory.*;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
@@ -29,8 +27,8 @@ public class ItemRepositoryTest {
 
     @BeforeEach
     void beforeEach() {
-        userA = RandomUserFactory.createRandomUser();
-        itemA = RandomItemFactory.createRandomItem();
+        userA = createUser();
+        itemA = createItem();
         itemA.setUser(userA);
     }
 

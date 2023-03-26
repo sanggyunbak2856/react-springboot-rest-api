@@ -1,7 +1,5 @@
 package com.example.demo.domain.repository;
 
-import com.example.demo.RandomItemFactory;
-import com.example.demo.RandomUserFactory;
 import com.example.demo.domain.entity.Item;
 import com.example.demo.domain.entity.User;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+import static com.example.demo.DummyObjectFactory.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
@@ -34,7 +33,7 @@ class UserRepositoryTest {
     @Transactional
     void 유저를_저장하고_조회한다() {
         // given
-        User userA = RandomUserFactory.createRandomUser();
+        User userA = createUser();
 
         // when
         User savedUser = userRepository.save(userA);
@@ -48,7 +47,7 @@ class UserRepositoryTest {
     @Transactional
     void 유저를_수정한다() {
         // given
-        User userA = RandomUserFactory.createRandomUser();
+        User userA = createUser();
         User savedUser = userRepository.save(userA);
 
         // when
@@ -65,7 +64,7 @@ class UserRepositoryTest {
     @Transactional
     void 유저를_삭제한다() {
         // given
-        User userA = RandomUserFactory.createRandomUser();
+        User userA = createUser();
         User savedUser = userRepository.save(userA);
 
         // when
@@ -80,8 +79,8 @@ class UserRepositoryTest {
     @Transactional
     void 유저_삭제시_아이템이_함께_삭제된다() {
         // given
-        User userA = RandomUserFactory.createRandomUser();
-        Item itemA = RandomItemFactory.createRandomItem();
+        User userA = createUser();
+        Item itemA = createItem();
         itemA.setUser(userA);
         User savedUser = userRepository.save(userA);
         Item savedItem = itemRepository.save(itemA);
