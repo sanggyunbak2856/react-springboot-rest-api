@@ -20,8 +20,12 @@ public class UserService {
     private final UserConverter userConverter;
 
     @Transactional
-    public IdResponseDto save(UserSaveDto userSaveDto) {
+    public IdResponseDto save(UserSaveDto userSaveDto) throws IllegalArgumentException{
         User user = userConverter.userSaveDtoToEntity(userSaveDto);
+        User foundUser = userRepository.findUserByUserId(userSaveDto.getUserId());
+        if(foundUser != null) {
+            throw new IllegalArgumentException("이미 존재하는 회원입니다");
+        }
         User savedUser = userRepository.save(user);
         return IdResponseDto.builder().id(savedUser.getId()).build();
     }

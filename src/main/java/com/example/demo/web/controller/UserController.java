@@ -5,6 +5,7 @@ import com.example.demo.web.dto.user.UserSaveDto;
 import com.example.demo.web.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.params.aggregator.ArgumentAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -29,7 +30,13 @@ public class UserController {
             return "/user/addUser";
         }
 
-        userService.save(userSaveDto);
+        try {
+            userService.save(userSaveDto);
+        } catch (IllegalArgumentException e) {
+            bindingResult.reject("user", e.getMessage());
+            return "/user/addUser";
+        }
+
         return "/home/home";
     }
 }
