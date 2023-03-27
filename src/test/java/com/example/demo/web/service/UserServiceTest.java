@@ -6,6 +6,7 @@ import com.example.demo.domain.repository.UserRepository;
 import com.example.demo.web.converter.UserConverter;
 import com.example.demo.web.dto.user.UserSaveDto;
 import com.example.demo.web.dto.user.UserUpdateDto;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static com.example.demo.DummyObjectFactory.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
@@ -44,6 +46,19 @@ class UserServiceTest {
 
         // then
         then(userRepository).should().save(any());
+    }
+
+    @Test
+    void 이미_존재하는_경우_가입하지_못하도록_한다() {
+        // given
+        User user = createUser();
+        UserSaveDto userSaveDto = createUserSaveDto();
+        when(userRepository.findUserByUserId(any())).thenReturn(user);
+
+        // when, then
+        assertThatThrownBy(() -> {
+            userService.save(userSaveDto);
+        }).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
